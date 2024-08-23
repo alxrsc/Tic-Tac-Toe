@@ -5,6 +5,7 @@
 char** initBoard();
 void printBoard(char** board);
 void playerMove(char** board);
+int smartComputerMove(char** board);
 void computerMove(char** board);
 int checkWinner(char** board);
 int checkFreeSpaces(char** board);
@@ -16,7 +17,8 @@ int main() {
         printBoard(board);
         playerMove(board);
         printBoard(board);
-        computerMove(board);
+        if( !smartComputerMove(board))
+            computerMove(board);
 
     }while(checkFreeSpaces(board) == 0 || checkWinner(board) == 0);
 
@@ -76,6 +78,54 @@ void playerMove(char** board)
     } while(board[x][y] != ' ' || x > 2 || y > 2);
 
     board[x][y] = 'X';
+}
+
+int smartComputerMove(char** board) {
+    int x, y;
+
+    // try winning if close
+    for(int i = 0; i < 3; i++) {
+        if(board[i][0] == 'O' && board[i][2] == 'O' && board[i][1] == ' ') {
+            board[i][1] = 'O';
+            printf("\nComputer move: x = %d y = %d\n", i, 1);
+            return 1;
+        }
+        if(board[0][i] == 'O' && board[2][i] == 'O' && board[1][i] == ' ') {
+            board[1][i] = 'O';
+            printf("\nComputer move: x = %d y = %d\n", 1, i);
+            return 1;
+        }
+    }
+
+    // check diagonals
+
+    if(((board[0][0] == 'O' && board[2][2] == 'O') || (board[0][2] == 'O' && board[2][0] == 'O')) && board[1][1] == ' ') {
+        board[1][1] = 'O';
+        printf("\nComputer move: x = %d y = %d\n", 1, 1);
+        return 1;
+    }
+
+    // try blocking user if is about to win
+    for(int i = 0; i < 3; i++) {
+        if(board[i][0] == 'X' && board[i][2] == 'X' && board[i][1] == ' ') {
+            board[i][1] = 'O';
+            printf("\nComputer move: x = %d y = %d\n", i, 1);
+            return 1;
+        }
+        if(board[0][i] == 'X' && board[2][i] == 'X' && board[1][i] == ' ') {
+            board[1][i] = 'O';
+            printf("\nComputer move: x = %d y = %d\n", 1, i);
+            return 1;
+        }
+    }
+
+    // check diagonals
+    if(((board[0][0] == 'X' && board[2][2] == 'X') || (board[0][2] == 'X' && board[2][0] == 'X')) && board[1][1] == ' ') {
+        board[1][1] = 'O';
+        return 1;
+    }
+
+    return 0;
 }
 
 void computerMove(char** board) {
