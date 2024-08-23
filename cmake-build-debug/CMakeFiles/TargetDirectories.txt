@@ -1,0 +1,3 @@
+/Users/alexandrurosca/Desktop/Facultate/Proiecte/Tic-Tac-Toe/cmake-build-debug/CMakeFiles/Tic_Tac_Toe.dir
+/Users/alexandrurosca/Desktop/Facultate/Proiecte/Tic-Tac-Toe/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/alexandrurosca/Desktop/Facultate/Proiecte/Tic-Tac-Toe/cmake-build-debug/CMakeFiles/rebuild_cache.dir
