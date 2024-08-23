@@ -5,7 +5,10 @@
 char** initBoard();
 void printBoard(char** board);
 void playerMove(char** board);
-int smartComputerMove(char** board);
+int smartComputerMoveX_X(char** board);
+int smartComputerMoveXX_(char** board);
+int smartComputerMove_XX(char** board);
+int smartComputerMoveX(char** board);
 void computerMove(char** board);
 int checkWinner(char** board);
 int checkFreeSpaces(char** board);
@@ -17,7 +20,16 @@ int main() {
         printBoard(board);
         playerMove(board);
         printBoard(board);
-        if( !smartComputerMove(board))
+
+        if( smartComputerMoveX_X(board) )
+            continue;
+        else if( smartComputerMoveXX_(board) )
+            continue;
+        else if( smartComputerMove_XX(board) )
+            continue;
+        else if( smartComputerMoveX(board) )
+            continue;
+        else
             computerMove(board);
 
     }while(checkFreeSpaces(board) == 0 || checkWinner(board) == 0);
@@ -42,11 +54,11 @@ char** initBoard() {
 
 void printBoard(char** board) {
     /*
-        | X |   |   |
+        |   |   |   |
         -------------
-        |   | X |   |
+        |   |   |   |
         -------------
-        |   |   | X |
+        |   |   |   |
      */
 
     for(int i = 0; i < 5; i++) {
@@ -71,7 +83,7 @@ void playerMove(char** board)
     do {
         printf("\nEnter your move:\n x = ");
         scanf("%d", &x);
-        printf("\n y = ");
+        printf(" y = ");
         scanf("%d", &y);
         if(board[x][y] != ' ' || x > 2 || y > 2)
             printf("\nPosition not available!\n");
@@ -80,9 +92,7 @@ void playerMove(char** board)
     board[x][y] = 'X';
 }
 
-int smartComputerMove(char** board) {
-    int x, y;
-
+int smartComputerMoveX_X(char** board) {
     // try winning if close
     for(int i = 0; i < 3; i++) {
         if(board[i][0] == 'O' && board[i][2] == 'O' && board[i][1] == ' ') {
@@ -125,6 +135,142 @@ int smartComputerMove(char** board) {
         return 1;
     }
 
+    return 0;
+}
+
+int smartComputerMoveXX_(char** board) {
+    // try winning if close
+    for(int i = 0; i < 3; i++) {
+        if(board[i][0] == 'O' && board[i][1] == 'O' && board[i][2] == ' ') {
+            board[i][2] = 'O';
+            printf("\nComputer move: x = %d y = %d\n", i, 2);
+            return 1;
+        }
+        if(board[0][i] == 'O' && board[1][i] == 'O' && board[2][i] == ' ') {
+            board[2][i] = 'O';
+            printf("\nComputer move: x = %d y = %d\n", 2, i);
+            return 1;
+        }
+    }
+
+    // check diagonals
+
+    if((board[0][0] == 'O' && board[1][1] == 'O') && board[2][2] == ' ') {
+        board[2][2] = 'O';
+        printf("\nComputer move: x = %d y = %d\n", 2, 2);
+        return 1;
+    }
+
+    if(board[0][2] == 'O' && board[1][1] == 'O' && board[2][0] == ' ') {
+        board[2][0] = 'O';
+        printf("\nComputer move: x = %d y = %d\n", 2, 0);
+        return 1;
+    }
+
+
+    // try blocking user if is about to win
+    for(int i = 0; i < 3; i++) {
+        if(board[i][0] == 'X' && board[i][1] == 'X' && board[i][2] == ' ') {
+            board[i][2] = 'O';
+            printf("\nComputer move: x = %d y = %d\n", i, 2);
+            return 1;
+        }
+        if(board[0][i] == 'X' && board[1][i] == 'X' && board[2][i] == ' ') {
+            board[2][i] = 'O';
+            printf("\nComputer move: x = %d y = %d\n", 2, i);
+            return 1;
+        }
+    }
+
+    // check diagonals
+    if(board[0][0] == 'X' && board[1][1] == 'X' && board[2][2] == ' ') {
+        board[2][2] = 'O';
+        return 1;
+    }
+
+    if(board[0][2] == 'X' && board[1][1] == 'X' && board[2][0] == ' ') {
+        board[2][0] = 'O';
+        printf("\nComputer move: x = %d y = %d\n", 2, 0);
+        return 1;
+    }
+
+    return 0;
+}
+
+int smartComputerMove_XX(char** board) {
+    // try winning if close
+    for(int i = 0; i < 3; i++) {
+        if(board[i][1] == 'O' && board[i][2] == 'O' && board[i][0] == ' ') {
+            board[i][0] = 'O';
+            printf("\nComputer move: x = %d y = %d\n", i, 0);
+            return 1;
+        }
+        if(board[1][i] == 'O' && board[2][i] == 'O' && board[0][i] == ' ') {
+            board[0][i] = 'O';
+            printf("\nComputer move: x = %d y = %d\n", 2, i);
+            return 1;
+        }
+    }
+
+    // check diagonals
+
+    if(board[1][1] == 'O' && board[2][2] == 'O' && board[0][0] == ' ') {
+        board[0][0] = 'O';
+        printf("\nComputer move: x = %d y = %d\n", 0, 0);
+        return 1;
+    }
+
+    if(board[1][1] == 'O' && board[2][0] == 'O' && board[0][2] == ' ') {
+        board[0][2] = 'O';
+        printf("\nComputer move: x = %d y = %d\n", 0, 2);
+        return 1;
+    }
+
+
+    // try blocking user if is about to win
+    for(int i = 0; i < 3; i++) {
+        if(board[i][1] == 'X' && board[i][2] == 'X' && board[i][0] == ' ') {
+            board[i][0] = 'O';
+            printf("\nComputer move: x = %d y = %d\n", i, 0);
+            return 1;
+        }
+        if(board[1][i] == 'X' && board[2][i] == 'X' && board[0][i] == ' ') {
+            board[0][i] = 'O';
+            printf("\nComputer move: x = %d y = %d\n", 0, i);
+            return 1;
+        }
+    }
+
+    // check diagonals
+    if(board[1][1] == 'X' && board[2][2] == 'X' && board[0][0] == ' ') {
+        board[0][0] = 'O';
+        return 1;
+    }
+
+    if(board[1][1] == 'X' && board[2][0] == 'X' && board[0][2] == ' ') {
+        board[2][0] = 'O';
+        printf("\nComputer move: x = %d y = %d\n", 0, 2);
+        return 1;
+    }
+
+    return 0;
+}
+
+int smartComputerMoveX(char** board) {
+    for(int i = 0; i < 3; i++)
+        for(int j = 0; j < 2; j++)
+            if(board[i][j] == 'X' && board[i][j+1] == ' ') {
+                board[i][j+1] = 'O';
+                printf("\nComputer move: x = %d y = %d\n", i, j+1);
+                return 1;
+            }
+
+    for(int i = 0; i < 3; i++)
+        if(board[i][1] == 'X' && board[i][0] == ' ') {
+            board[i][0] = 'O';
+            printf("\nComputer move: x = %d y = %d\n", i, 0);
+            return 1;
+        }
     return 0;
 }
 
